@@ -49,6 +49,7 @@ import robotiq_modbus_rtu.comModbusRtu
 import os, sys
 from robotiq_2f_gripper_control.msg import _Robotiq2FGripper_robot_input  as inputMsg
 from robotiq_2f_gripper_control.msg import _Robotiq2FGripper_robot_output as outputMsg
+from pymodbus.exceptions import ModbusIOException
 
 def mainLoop(device):
     
@@ -57,10 +58,11 @@ def mainLoop(device):
     gripper.client = robotiq_modbus_rtu.comModbusRtu.communication()
 
     #We connect to the address received as an argument
-    gripper.client.connectToDevice(device)
-
-    rospy.init_node('robotiq2FGripper')
-
+    if (gripper.client.connectToDevice(device)):
+        rospy.loginfo("Device connected")
+    else:
+        rospy.logerr("Device not connected")
+    
     #The Gripper status is published on the topic named 'Robotiq2FGripperRobotInput'
     pub = rospy.Publisher('Robotiq2FGripperRobotInput', inputMsg.Robotiq2FGripper_robot_input)
 
@@ -69,22 +71,32 @@ def mainLoop(device):
     
 
     #We loop
+    rospy.loginfo("Starting main loop")
     while not rospy.is_shutdown():
+        
+        try:
+            #Get and publish the Gripper status
+            rospy.loginfo("Getting status")
+            status = gripper.getStatus()
+            #pub.publish(status)     
+            rospy.logdebug(f"Read status {status}")
+            #Wait a little
+            rospy.sleep(0.05)
 
-      #Get and publish the Gripper status
-      status = gripper.getStatus()
-      pub.publish(status)     
+            #Send the most recent command
+            rospy.logdebug("Sending command")
+            gripper.sendCommand()
 
-      #Wait a little
-      #rospy.sleep(0.05)
+            #Wait a little
+            rospy.sleep(0.05)
+        except AttributeError as e:
+            pass
 
-      #Send the most recent command
-      gripper.sendCommand()
-
-      #Wait a little
-      #rospy.sleep(0.05)
             
 if __name__ == '__main__':
+
+    rospy.init_node('robotiq2FGripper')
     try:
+        rospy.loginfo("Gripper RTU Node")
         mainLoop(sys.argv[1])
     except rospy.ROSInterruptException: pass

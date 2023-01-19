@@ -55,7 +55,7 @@ class communication:
       """Connection to the client - the method takes the IP address (as a string, e.g. '192.168.1.11') as an argument."""
       self.client = ModbusSerialClient(method='rtu',port=device,stopbits=1, bytesize=8, baudrate=115200, timeout=0.2)
       if not self.client.connect():
-          print "Unable to connect to %s" % device
+          print ("Unable to connect to %s".format(device))
           return False
       return True
 
@@ -73,7 +73,7 @@ class communication:
       message = []
 
       #Fill message by combining two bytes in one register
-      for i in range(0, len(data)/2):
+      for i in range(0, int(len(data)/2)):
          message.append((data[2*i] << 8) + data[2*i+1])
 
       #To do!: Implement try/except 
@@ -86,7 +86,7 @@ class communication:
       #To do!: Implement try/except 
       #Get status from the device
       response = self.client.read_holding_registers(0x07D0, numRegs, unit=0x0009)
-
+      
       #Instantiate output as an empty list
       output = []
 
