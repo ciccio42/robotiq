@@ -90,7 +90,7 @@ def mainLoop(device):
             #Wait a little
             rospy.sleep(0.05)
         except AttributeError as e:
-            pass
+            rospy.loginfo("Waiting for connection")
 
             
 if __name__ == '__main__':
