@@ -76,7 +76,7 @@ def mainLoop(device):
         
         try:
             #Get and publish the Gripper status
-            rospy.loginfo("Getting status")
+            rospy.logdebug("Getting status")
             status = gripper.getStatus()
             #pub.publish(status)     
             rospy.logdebug(f"Read status {status}")
