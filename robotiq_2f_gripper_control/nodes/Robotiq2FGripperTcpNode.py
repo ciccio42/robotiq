@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Software License Agreement (BSD License)
 #
@@ -69,12 +69,14 @@ def mainLoop(address):
     
 
     #We loop
+    rospy.loginfo("Main loop")
     while not rospy.is_shutdown():
 
       #Get and publish the Gripper status
       status = gripper.getStatus()
       pub.publish(status)     
-
+      
+      rospy.loginfo(f"Status {status}")
       #Wait a little
       rospy.sleep(0.05)
 

@@ -96,7 +96,7 @@ class robotiqbaseRobotiq2FGripper:
         self.message.append(command.rFR)     
 
     def sendCommand(self):
-        """Send the command to the Gripper."""    
+        """Send the command to the Gripper.""" 
         
         self.client.sendCommand(self.message)
 

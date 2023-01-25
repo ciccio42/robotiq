@@ -65,13 +65,13 @@ class communication:
       """Send a command to the Gripper - the method takes a list of uint8 as an argument. The meaning of each variable depends on the Gripper model (see support.robotiq.com for more details)"""
       #make sure data has an even number of elements   
       if(len(data) % 2 == 1):
-         data.append(0)
+         data.append(0) 
 
       #Initiate message as an empty list
       message = []
 
       #Fill message by combining two bytes in one register
-      for i in range(0, len(data)/2):
+      for i in range(0, int(len(data)/2)):
          message.append((data[2*i] << 8) + data[2*i+1])
 
       #To do!: Implement try/except
