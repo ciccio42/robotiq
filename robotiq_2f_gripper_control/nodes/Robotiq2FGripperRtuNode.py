@@ -64,7 +64,7 @@ def mainLoop(device):
         rospy.logerr("Device not connected")
     
     #The Gripper status is published on the topic named 'Robotiq2FGripperRobotInput'
-    pub = rospy.Publisher('Robotiq2FGripperRobotInput', inputMsg.Robotiq2FGripper_robot_input)
+    pub = rospy.Publisher('Robotiq2FGripperRobotInput', inputMsg.Robotiq2FGripper_robot_input, queue_size=1)
 
     #The Gripper command is received from the topic named 'Robotiq2FGripperRobotOutput'
     rospy.Subscriber('Robotiq2FGripperRobotOutput', outputMsg.Robotiq2FGripper_robot_output, gripper.refreshCommand)
@@ -78,7 +78,7 @@ def mainLoop(device):
             #Get and publish the Gripper status
             rospy.logdebug("Getting status")
             status = gripper.getStatus()
-            #pub.publish(status)     
+            pub.publish(status)     
             rospy.logdebug(f"Read status {status}")
             #Wait a little
             rospy.sleep(0.05)
